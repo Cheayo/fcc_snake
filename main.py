@@ -27,8 +27,8 @@ class Snake:
         self.length = length
         self.parent_screen = parent_screen
         self.block = pygame.image.load("resources/block.jpg")
-        self.x = [SIZE]*length
-        self.y = [SIZE]*length
+        self.x = [SIZE] * length
+        self.y = [SIZE] * length
         self.direction = 'down'
 
     def grow(self):
@@ -79,7 +79,7 @@ class Game:
         pygame.init()
         self.surface = pygame.display.set_mode((1000, 800))
         self.surface.fill((110, 110, 5))
-        self.snake = Snake(self.surface, 2)
+        self.snake = Snake(self.surface, 1)
         self.snake.draw()
         self.apple = Apple(self.surface)
         self.apple.draw()
@@ -90,10 +90,17 @@ class Game:
     def play(self):
         self.snake.walk()
         self.apple.draw()
+        self.display_score()
 
         if self.is_collision(self.snake.x[0], self.snake.y[0], self.apple.x, self.apple.y):
             self.snake.grow()
             self.apple.move()
+
+    def display_score(self):
+        font = pygame.font.SysFont('arial', 30)
+        score = font.render(f"Score: {self.snake.length}", True, (255, 255, 255))
+        self.surface.blit(score, (800, 10))
+        pygame.display.flip()
 
     def run(self):
         running = True
