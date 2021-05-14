@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import time
+import random
 
 SIZE = 40
 
@@ -16,6 +17,10 @@ class Apple:
         self.parent_screen.blit(self.image, (self.x, self.y))
         pygame.display.flip()
 
+    def move(self):
+        self.x = random.randint(0, 24) * SIZE
+        self.y = random.randint(0, 19) * SIZE
+
 
 class Snake:
     def __init__(self, parent_screen, length):
@@ -25,6 +30,11 @@ class Snake:
         self.x = [SIZE]*length
         self.y = [SIZE]*length
         self.direction = 'down'
+
+    def grow(self):
+        self.length += 1
+        self.x.append(-1)
+        self.y.append(-1)
 
     def draw(self):
         self.parent_screen.fill((110, 110, 5))
@@ -75,15 +85,15 @@ class Game:
         self.apple.draw()
 
     def is_collision(self, x1, y1, x2, y2):
-        if x1 >= x2 and x1 <= x2 + SIZE:
-            if y1 >= y2 and y1 <= y2 + SIZE:
-
-
-
+        return x2 <= x1 < x2 + SIZE and y2 <= y1 < y2 + SIZE
 
     def play(self):
         self.snake.walk()
         self.apple.draw()
+
+        if self.is_collision(self.snake.x[0], self.snake.y[0], self.apple.x, self.apple.y):
+            self.snake.grow()
+            self.apple.move()
 
     def run(self):
         running = True
